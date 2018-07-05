@@ -32,18 +32,19 @@ class ResolverException(Exception):
 
 
 class Resolver:
-    @staticmethod
-    def topological_sort(graph: Graph) -> List[str]:
+    def __init__(self, graph: Graph):
+        self.nodes = graph.nodes
+
+    def _topological_sort(self) -> List[str]:
         """
         Does a topological sort of a dependency graph.
-        :param Graph graph: The graph to sort.
         :return List[str]: The topological order of the dependency graph.
         """
 
         result = []
         zero_in_degree = []
 
-        nodes = graph.nodes
+        nodes = self.nodes
         in_degree = {node: 0 for node in nodes}
 
         for node in nodes:
@@ -65,17 +66,15 @@ class Resolver:
 
         return result
 
-    @staticmethod
-    def get_order(graph: Graph) -> List[str]:
+    def resolve(self) -> List[str]:
         """
         Returns the order for a dependency graph.
-        :param Graph graph: The graph to get the order for.
         :return List[str]: The dependency order.
         """
 
-        order = Resolver.topological_sort(graph)[::-1]
-        if len(order) != len(graph.nodes):
-            cyclic = set(graph.nodes.keys()).difference(set(order))
+        order = self._topological_sort()[::-1]
+        if len(order) != len(self.nodes):
+            cyclic = set(self.nodes.keys()).difference(set(order))
             raise ResolverException("Cyclic dependencies detected in nodes {:s}.".format(str(cyclic)))
 
         return order

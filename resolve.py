@@ -1,3 +1,5 @@
+import time
+
 from lib.dependency import Node, Graph, Resolver
 
 a = Node('a')
@@ -37,4 +39,5 @@ graph.add_node(g)
 graph.add_node(h)
 graph.add_node(i)
 
-print(Resolver.get_order(graph))
+resolver = Resolver(graph)
+print(resolver.resolve())
